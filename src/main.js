@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="product-footer">
           <span class="product-price">${product.price}</span>
           <button class="btn-primary small" onclick="window.addToCart(${product.id})">
-            افزودن <i class="ph-bold ph-plus"></i>
+            افزودن به سبد خرید
           </button>
         </div>
       </div>
@@ -341,9 +341,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('active');
+      } else {
+        entry.target.classList.remove('active'); // Hide when scrolling up/out
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
