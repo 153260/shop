@@ -21,37 +21,42 @@
 <body>
   <div id="silk-container" class="global-bg"></div>
   <div id="app">
-    <header id="header">
-      <div class="container nav-content">
-        <a href="#" class="logo">
-          <i class="ph-fill ph-shopping-bag-open"></i>
-          Flwy Shop
-        </a>
-        <nav>
-          <ul class="nav-links">
-            <li><a href="#home">خانه</a></li>
-            <li><a href="#products">محصولات</a></li>
-            <li><a href="#about">درباره ما</a></li>
-            <li><a href="https://t.me/FRBXK" target="_blank">تماس</a></li>
-          </ul>
-        </nav>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+    <!-- Header -->
+    <header>
+      <a href="#" class="logo">
+        <i class="ph-fill ph-storefront"></i>
+        Flwy Shop
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#home" class="active">خانه</a></li>
+          <li><a href="#products">محصولات</a></li>
+          <li><a href="#about">درباره ما</a></li>
+          <li><a href="https://t.me/FRBXK" target="_blank">تماس</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="icon-btn" aria-label="Toggle Dark Mode">
           <i class="ph-fill ph-moon"></i>
         </button>
-        <div class="user-actions">
-          <button id="cart-btn" class="icon-btn" aria-label="Cart">
-            <i class="ph-fill ph-shopping-cart"></i>
-            <span id="cart-count" class="badge hidden">0</span>
-          </button>
-          <button id="login-btn" class="btn-primary small">ورود / ثبت نام</button>
-          <div id="user-profile" class="hidden">
-            <img id="user-avatar" src="" alt="User" />
-            <div class="dropdown-menu">
-              <span id="user-name"></span>
-              <button id="admin-dashboard-btn" class="hidden">پنل ادمین</button>
-              <button id="logout-btn">خروج</button>
-            </div>
-          </div>
+
+        <button id="cart-btn" class="icon-btn" aria-label="Cart">
+          <i class="ph-fill ph-shopping-cart-simple"></i>
+          <span id="cart-count" class="cart-count hidden">0</span>
+        </button>
+
+        <button id="login-btn" class="btn-primary small">
+          ورود / ثبت نام
+        </button>
+
+        <!-- User Profile (Hidden by default) -->
+        <div id="user-profile" class="user-profile hidden">
+          <img id="user-avatar" src="" alt="User Avatar">
+          <span id="user-name"></span>
+          <button id="logout-btn" class="btn-secondary small">خروج</button>
+          <button id="admin-dashboard-btn" class="btn-secondary small hidden">پنل ادمین</button>
         </div>
       </div>
     </header>
