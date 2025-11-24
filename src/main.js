@@ -307,10 +307,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (entry.isIntersecting) {
         entry.target.classList.add('active');
       } else {
-        entry.target.classList.remove('active'); // Hide when scrolling up/out
+        // Only remove active if element is significantly out of view to prevent flickering
+        if (entry.boundingClientRect.top > 0) {
+          entry.target.classList.remove('active');
+        }
       }
     });
-  }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+  }, { threshold: 0.15 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
