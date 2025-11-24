@@ -291,38 +291,40 @@ header.scrolled {
 
 .product-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  /* Lighter, cleaner background */
+  backdrop-filter: blur(5px);
+  /* Less blur for cleaner look */
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s ease;
   overflow: hidden;
-  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .product-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(125deg, rgba(255, 255, 255, 0.15) 0%, transparent 40%, transparent 60%, rgba(255, 255, 255, 0.05) 100%);
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15), transparent 70%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.3s ease;
   z-index: -1;
 }
 
 .product-card:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
+  /* Neon border on hover */
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 10px rgba(59, 130, 246, 0.2);
+  /* Neon glow */
 }
 
 .product-card:hover::before {
@@ -330,40 +332,40 @@ header.scrolled {
 }
 
 .product-icon {
-  width: 72px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   margin-bottom: 1.5rem;
-  border-radius: 18px;
+  border-radius: 50%;
+  /* Circular icon for modern look */
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .product-card:hover .product-icon {
-  transform: scale(1.15) rotate(5deg);
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 30px var(--icon-glow-color, rgba(255, 255, 255, 0.2));
+  transform: scale(1.1);
+  background: var(--accent-color);
+  color: white;
+  box-shadow: 0 0 15px var(--accent-color);
 }
 
 .product-title {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
-  letter-spacing: -0.5px;
 }
 
 .product-desc {
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
-  line-height: 1.6;
-  opacity: 0.8;
+  line-height: 1.5;
 }
 
 .product-footer {
@@ -372,15 +374,14 @@ header.scrolled {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .product-price {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--accent-color);
-  text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  color: var(--text-primary);
 }
 
 .buy-btn {
