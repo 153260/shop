@@ -369,16 +369,25 @@ document.addEventListener('DOMContentLoaded', () => {
     addProductForm.reset();
   });
 
-  // Support Modal Logic
-  const supportModal = document.getElementById('support-modal');
+  // Support Button - Opens Goftino Widget
   const supportBtn = document.getElementById('support-btn');
-  const closeSupportBtn = document.getElementById('close-support-modal');
-
-  supportBtn.addEventListener('click', () => {
-    supportModal.classList.remove('hidden');
-  });
-
-  closeSupportBtn.addEventListener('click', () => {
-    supportModal.classList.add('hidden');
-  });
+  if (supportBtn) {
+    supportBtn.addEventListener('click', () => {
+      // Method 1: Try Goftino API
+      if (typeof Goftino !== 'undefined' && Goftino.open) {
+        Goftino.open();
+      }
+      // Method 2: Try clicking the Goftino widget button
+      else {
+        const goftinoBtn = document.querySelector('.goftino-widget-button, #goftino-widget-button, [class*="goftino"]');
+        if (goftinoBtn) {
+          goftinoBtn.click();
+        } else {
+          // Fallback: Show message
+          console.log('Goftino widget not found. Please wait for it to load.');
+          alert('پشتیبانی آنلاین در حال بارگذاری است. لطفاً چند لحظه صبر کنید.');
+        }
+      }
+    });
+  }
 });

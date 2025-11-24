@@ -11,6 +11,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&family=Outfit:wght@700;900&display=swap"
     rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Goftino Live Chat Widget -->
+  <script>
+    !function () {
+      var i = "i44h02", a = window, d = document;
+      function g() {
+        var g = d.createElement("script"),
+          s = "https://www.goftino.com/widget/" + i,
+          l = localStorage.getItem("goftino_" + i);
+        g.async = !0, g.src = l ? s + "?o=" + l : s;
+        d.getElementsByTagName("head")[0].appendChild(g);
+      }
+      "complete" === d.readyState ? g() : a.attachEvent ? a.attachEvent("onload", g) : a.addEventListener("load", g, !1);
+    }();
+  </script>
 </head>
 
 <body>
@@ -71,8 +86,8 @@
     </div>
     <div id="cart-overlay" class="overlay"></div>
 
-    <!-- Support Widget -->
-    <button id="support-btn" class="support-btn" aria-label="Support">
+    <!-- Floating Support Button -->
+    <button id="support-btn" class="floating-support-btn" aria-label="پشتیبانی آنلاین">
       <i class="ph-fill ph-chat-circle-text"></i>
     </button>
 
@@ -117,25 +132,6 @@
           <input type="color" id="p-color" value="#3b82f6">
           <button type="submit" class="btn-primary full-width">افزودن محصول</button>
         </form>
-      </div>
-    </div>
-
-    <!-- Support Modal -->
-    <div id="support-modal" class="modal hidden">
-      <div class="modal-content glass-card">
-        <div class="modal-header">
-          <h3>پشتیبانی آنلاین</h3>
-          <button id="close-support-modal" class="icon-btn"><i class="ph-fill ph-x"></i></button>
-        </div>
-        <div class="chat-box">
-          <div class="message system">
-            <p>سلام! چطور میتونم کمکتون کنم؟</p>
-          </div>
-        </div>
-        <div class="chat-input">
-          <input type="text" placeholder="پیام خود را بنویسید...">
-          <button class="icon-btn"><i class="ph-fill ph-paper-plane-right"></i></button>
-        </div>
       </div>
     </div>
 
