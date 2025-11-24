@@ -97,8 +97,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateCartUI();
   }
 
+  let isLoggingIn = false;
   if (loginBtn) {
     loginBtn.addEventListener('click', async () => {
+      // Prevent multiple clicks
+      if (isLoggingIn) {
+        console.log('Login already in progress...');
+        return;
+      }
+
+      isLoggingIn = true;
+      loginBtn.disabled = true;
+      const originalText = loginBtn.textContent;
+      loginBtn.textContent = 'در حال ورود...';
+
       try {
         await loginWithGoogle();
       } catch (error) {
@@ -106,14 +118,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Check if it's a Firebase Auth configuration error
         if (error.code === 'auth/operation-not-allowed') {
-          alert('⚠️ لاگین با گوگل فعال نیست!\n\nلطفاً این مراحل را انجام دهید:\n1. به console.firebase.google.com بروید\n2. Authentication > Sign-in method\n3. Google را فعال کنید');
+          alert('⚠️ لاگین با گوگل فعال نیست!\n\nلطفاً این مراحل را انجام دهید:\n1. به console.firebase.google.com بروید\n2. پروژه frdrick-17f7d را باز کنید\n3. Authentication > Sign-in method\n4. Google را Enable کنید\n5. یک Support Email وارد کنید\n6. Save کنید');
         } else if (error.code === 'auth/popup-blocked') {
           alert('⚠️ مرورگر شما پاپ‌آپ را مسدود کرده است.\nلطفاً مسدودیت پاپ‌آپ را برای این سایت غیرفعال کنید.');
         } else if (error.code === 'auth/unauthorized-domain') {
           alert('⚠️ دامنه localhost مجاز نیست.\n\nدر کنسول فایربیس:\nAuthentication > Settings > Authorized domains\nلطفاً localhost را اضافه کنید.');
+        } else if (error.code === 'auth/cancelled-popup-request') {
+          // Silent fail - user probably clicked multiple times
+          console.log('Popup cancelled - likely multiple clicks');
         } else {
           alert('❌ خطا در ورود: ' + (error.message || 'لطفاً تنظیمات فایربیس را بررسی کنید.'));
         }
+      } finally {
+        isLoggingIn = false;
+        loginBtn.disabled = false;
+        loginBtn.textContent = originalText;
       }
     });
   }
