@@ -200,22 +200,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // --- Product Page Navigation (Global) ---
+  window.openProductPage = function (productId) {
+    // We need access to 'products' array. 
+    // Since this is global, we might need to find it from a global source or pass it.
+    // But 'products' is defined inside DOMContentLoaded. 
+    // Let's rely on localStorage 'initialProducts' or fetch from a global variable if needed.
+    // Better: Just navigate and let product.html handle the lookup if we can't find it here.
+
+    // Try to find in the local 'products' variable if we are in the same scope, 
+    // but since we are moving this out, we need a way to access it.
+    // Actually, let's keep it inside DOMContentLoaded but ensure it's assigned to window.
+
+    // For now, let's just navigate. product.js handles the lookup from localStorage or URL.
+    // But we wanted to save to localStorage first.
+
+    // Quick fix: Access the products from a global variable if possible, 
+    // or just pass the product object itself? No, onclick passes string/number.
+
+    // Let's keep the function inside DOMContentLoaded but make sure renderProducts uses onclick="window.openProductPage..."
+    // and we trust that 'products' is available in the closure.
+  };
+
+  // ... (Wait, I can't move it out easily if it depends on 'products')
+
+  // Let's just revert to the previous plan: Keep it in DOMContentLoaded, but use onclick.
+  // The issue with previous onclick was maybe scope. 
+  // window.openProductPage IS global. So onclick="window.openProductPage(1)" SHOULD work.
+
   // --- Product Page Navigation ---
   window.openProductPage = function (productId) {
+    // Access 'products' from the closure
     const product = products.find(p => p.id === productId);
-    if (!product) return;
-    // Store selected product in localStorage for the detail page
-    localStorage.setItem('selectedProduct', JSON.stringify(product));
-    // Navigate to product detail page in the same tab
+    if (product) {
+      localStorage.setItem('selectedProduct', JSON.stringify(product));
+    }
     window.location.href = `product.html?id=${productId}`;
   };
 
-  // Updated renderProducts to use data-id and attach click listeners
   function renderProducts() {
     if (!productsGrid) return;
-    // Render cards with data-id (no inline onclick)
     productsGrid.innerHTML = products.map(product => `
-      <div class="product-card reveal" data-id="${product.id}">
+      <div class="product-card reveal" onclick="window.openProductPage(${product.id})" style="cursor: pointer;">
         <div class="product-icon" style="color: ${product.color}; box-shadow: 0 10px 30px -10px ${product.color}66;">
           <i class="ph-fill ${product.icon}"></i>
         </div>
@@ -227,14 +253,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       </div>
     `).join('');
-    // Attach click listeners to each card to open product page in new tab
-    document.querySelectorAll('.product-card').forEach(card => {
-      const id = Number(card.dataset.id);
-      card.addEventListener('click', () => openProductPage(id));
-    });
-    // Observe reveal animations
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
+
 
   async function fetchProducts() {
     // Immediately render initial products (fast)
