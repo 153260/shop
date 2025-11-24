@@ -200,11 +200,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Updated renderProducts to include click handler for modal
+  // --- Product Page Navigation ---
+  window.openProductPage = function (productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    // Store selected product in localStorage for the detail page
+    localStorage.setItem('selectedProduct', JSON.stringify(product));
+    // Navigate to product detail page
+    window.location.href = `product.html?id=${productId}`;
+  };
+
+  // Updated renderProducts to use openProductPage
   function renderProducts() {
     if (!productsGrid) return;
     productsGrid.innerHTML = products.map(product => `
-      <div class="product-card reveal" onclick="openProductModal(${product.id})">
+      <div class="product-card reveal" onclick="openProductPage(${product.id})">
         <div class="product-icon" style="color: ${product.color}; box-shadow: 0 10px 30px -10px ${product.color}66;">
           <i class="ph-fill ${product.icon}"></i>
         </div>
