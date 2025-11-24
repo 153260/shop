@@ -77,14 +77,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (user) {
       if (loginBtn) loginBtn.classList.add('hidden');
       if (userProfile) userProfile.classList.remove('hidden');
+      if (logoutBtn) logoutBtn.classList.remove('hidden'); // show logout
       if (userAvatar) userAvatar.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + (user.displayName || 'User');
       if (userName) userName.textContent = user.displayName || 'کاربر عزیز';
 
-      // Admin Check (Replace with real admin email later)
-      // For now, allow anyone to see admin button if they are logged in (for demo)
-      if (user.email && adminDashboardBtn) {
-        // adminDashboardBtn.classList.remove('hidden'); // Uncomment to enable for all logged in users
-      }
+      // Admin check
+      updateAdminVisibility(user);
 
       // Load Cart from DB
       try {
@@ -94,7 +92,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       if (loginBtn) loginBtn.classList.remove('hidden');
       if (userProfile) userProfile.classList.add('hidden');
+      if (logoutBtn) logoutBtn.classList.add('hidden'); // hide logout
       cart = JSON.parse(localStorage.getItem('local_cart')) || [];
+      updateAdminVisibility(null);
     }
     updateCartUI();
   }
