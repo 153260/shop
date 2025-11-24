@@ -290,16 +290,13 @@ header.scrolled {
 }
 
 .product-card {
-  background: rgba(15, 23, 42, 0.4);
-  /* More transparent */
+  background: rgba(255, 255, 255, 0.08);
+  /* Lighter, glassier background */
   backdrop-filter: blur(20px) saturate(180%);
-  /* Stronger blur & saturation */
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  /* Top light reflection */
   border-left: 1px solid rgba(255, 255, 255, 0.2);
-  /* Left light reflection */
   border-radius: 24px;
   padding: 2rem 1.5rem;
   display: flex;
@@ -309,8 +306,8 @@ header.scrolled {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  /* Deep shadow */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  /* Softer shadow */
 }
 
 /* Glass Reflection Shine */
@@ -344,13 +341,9 @@ header.scrolled {
 }
 
 .product-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  background: rgba(15, 23, 42, 0.8);
-  border-color: #3b82f6;
-  /* Neon Blue Border */
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), inset 0 0 10px rgba(59, 130, 246, 0.2);
-  /* Strong Neon Glow */
-  z-index: 10;
+  transform: translateY(-5px);
+  border-color: rgba(59, 130, 246, 0.4);
+  /* No neon glow on card hover */
 }
 
 /* Scroll Reveal Animation */
@@ -381,7 +374,18 @@ header.scrolled {
   font-size: 2.2rem;
   background: rgba(255, 255, 255, 0.05);
   color: var(--accent-color);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+  /* Removed neon glow */
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-icon {
+  transform: rotate(15deg) translateX(5px);
+  /* Tilt right on hover */
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent-color);
+  box-shadow: none;
+  /* Ensure no glow */
 }
 
 .product-title {
@@ -422,7 +426,8 @@ header.scrolled {
   color: #3b82f6;
   /* Bright blue */
   margin-bottom: 0.5rem;
-  text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+  text-shadow: none;
+  /* Removed neon text shadow */
 }
 
 /* Outline Button Style from Screenshot */
