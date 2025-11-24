@@ -103,7 +103,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loginWithGoogle();
       } catch (error) {
         console.error("Login Failed:", error);
-        alert('خطا در ورود: لطفاً تنظیمات فایربیس را بررسی کنید.');
+
+        // Check if it's a Firebase Auth configuration error
+        if (error.code === 'auth/operation-not-allowed') {
+          alert('⚠️ لاگین با گوگل فعال نیست!\n\nلطفاً این مراحل را انجام دهید:\n1. به console.firebase.google.com بروید\n2. Authentication > Sign-in method\n3. Google را فعال کنید');
+        } else if (error.code === 'auth/popup-blocked') {
+          alert('⚠️ مرورگر شما پاپ‌آپ را مسدود کرده است.\nلطفاً مسدودیت پاپ‌آپ را برای این سایت غیرفعال کنید.');
+        } else if (error.code === 'auth/unauthorized-domain') {
+          alert('⚠️ دامنه localhost مجاز نیست.\n\nدر کنسول فایربیس:\nAuthentication > Settings > Authorized domains\nلطفاً localhost را اضافه کنید.');
+        } else {
+          alert('❌ خطا در ورود: ' + (error.message || 'لطفاً تنظیمات فایربیس را بررسی کنید.'));
+        }
       }
     });
   }
@@ -132,16 +142,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   ];
 
   async function fetchProducts() {
+    // Immediately render initial products (fast)
     products = initialProducts;
+    renderProducts();
+
+    // Then fetch from Firebase in background (if available)
     if (getProducts) {
       try {
         const dbProducts = await getProducts();
         if (dbProducts && dbProducts.length > 0) {
           products = [...initialProducts, ...dbProducts];
+          renderProducts(); // Re-render with DB products
         }
-      } catch (e) { console.log('Fetching local products only'); }
+      } catch (e) {
+        console.log('Using local products only:', e);
+      }
     }
-    renderProducts();
   }
 
   function renderProducts() {
