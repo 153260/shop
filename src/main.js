@@ -7,6 +7,8 @@ import { getProducts, addProduct as addDbProduct, addToCart as addToDbCart, getU
 let currentUser = null;
 let cart = JSON.parse(localStorage.getItem('local_cart')) || [];
 let products = [];
+// Admin email for privileged actions
+const ADMIN_EMAIL = '13hero99@gmail.com';
 
 // --- DOM Elements ---
 document.addEventListener('DOMContentLoaded', async () => {
@@ -146,19 +148,76 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --- Products Logic ---
-  // Initial Mock Products
+  // Initial Mock Products with duration field
   const initialProducts = [
-    { id: 1, title: 'Spotify Premium', price: '۱۲۰,۰۰۰ تومان', icon: 'ph-spotify-logo', desc: 'اشتراک ۱ ماهه پرمیوم اسپاتیفای', color: '#1db954' },
-    { id: 2, title: 'Netflix 4K', price: '۳۵۰,۰۰۰ تومان', icon: 'ph-film-strip', desc: 'اشتراک ۱ ماهه نتفلیکس اولترا', color: '#e50914' },
-    { id: 3, title: 'Apple Music', price: '۱۵۰,۰۰۰ تومان', icon: 'ph-music-notes', desc: 'اشتراک ۱ ماهه اپل موزیک', color: '#fa2d48' },
-    { id: 4, title: 'YouTube Premium', price: '۹۰,۰۰۰ تومان', icon: 'ph-youtube-logo', desc: 'اشتراک ۱ ماهه یوتیوب بدون تبلیغ', color: '#ff0000' },
-    { id: 5, title: 'Telegram Premium', price: '۲۰۰,۰۰۰ تومان', icon: 'ph-telegram-logo', desc: 'اشتراک ۳ ماهه تلگرام پرمیوم', color: '#229ED9' },
-    { id: 6, title: 'PlayStation Plus', price: '۴۵۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری پلی‌استیشن', color: '#00439c' },
-    { id: 7, title: 'Xbox Game Pass', price: '۳۸۰,۰۰۰ تومان', icon: 'ph-xbox-logo', desc: 'اشتراک ۱ ماهه گیم پس آلتیمیت', color: '#107C10' },
-    { id: 8, title: 'Discord Nitro', price: '۲۵۰,۰۰۰ تومان', icon: 'ph-discord-logo', desc: 'اشتراک ۱ ماهه دیسکورد نیترو', color: '#5865F2' },
-    { id: 9, title: 'ChatGPT Plus', price: '۹۵۰,۰۰۰ تومان', icon: 'ph-robot', desc: 'اشتراک ۱ ماهه چت جی‌پی‌تی پلاس', color: '#10a37f' },
-    { id: 10, title: 'Steam Wallet', price: '۵۰۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری استیم', color: '#1b2838' },
+    { id: 1, title: 'Spotify Premium', price: '۱۲۰,۰۰۰ تومان', icon: 'ph-spotify-logo', desc: 'اشتراک ۱ ماهه پرمیوم اسپاتیفای', color: '#1db954', duration: 'ماهانه' },
+    { id: 2, title: 'Netflix 4K', price: '۳۵۰,۰۰۰ تومان', icon: 'ph-film-strip', desc: 'اشتراک ۱ ماهه نتفلیکس اولترا', color: '#e50914', duration: 'ماهانه' },
+    { id: 3, title: 'Apple Music', price: '۱۵۰,۰۰۰ تومان', icon: 'ph-music-notes', desc: 'اشتراک ۱ ماهه اپل موزیک', color: '#fa2d48', duration: 'ماهانه' },
+    { id: 4, title: 'YouTube Premium', price: '۹۰,۰۰۰ تومان', icon: 'ph-youtube-logo', desc: 'اشتراک ۱ ماهه یوتیوب بدون تبلیغ', color: '#ff0000', duration: 'ماهانه' },
+    { id: 5, title: 'Telegram Premium', price: '۲۰۰,۰۰۰ تومان', icon: 'ph-telegram-logo', desc: 'اشتراک ۳ ماهه تلگرام پرمیوم', color: '#229ED9', duration: '۳ ماهه' },
+    { id: 6, title: 'PlayStation Plus', price: '۴۵۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری پلی‌استیشن', color: '#00439c', duration: 'یک‌بار' },
+    { id: 7, title: 'Xbox Game Pass', price: '۳۸۰,۰۰۰ تومان', icon: 'ph-xbox-logo', desc: 'اشتراک ۱ ماهه گیم پس آلتیمیت', color: '#107C10', duration: 'ماهانه' },
+    { id: 8, title: 'Discord Nitro', price: '۲۵۰,۰۰۰ تومان', icon: 'ph-discord-logo', desc: 'اشتراک ۱ ماهه دیسکورد نیترو', color: '#5865F2', duration: 'ماهانه' },
+    { id: 9, title: 'ChatGPT Plus', price: '۹۵۰,۰۰۰ تومان', icon: 'ph-robot', desc: 'اشتراک ۱ ماهه چت جی‌پی‌تی پلاس', color: '#10a37f', duration: 'ماهانه' },
+    { id: 10, title: 'Steam Wallet', price: '۵۰۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری استیم', color: '#1b2838', duration: 'یک‌بار' },
   ];
+
+  // Admin visibility helper
+  function updateAdminVisibility(user) {
+    if (adminDashboardBtn) {
+      if (user && user.email === ADMIN_EMAIL) {
+        adminDashboardBtn.classList.remove('hidden');
+      } else {
+        adminDashboardBtn.classList.add('hidden');
+      }
+    }
+  }
+
+  // Product modal elements
+  const productModal = document.getElementById('product-modal');
+  const closeModalBtn = document.getElementById('close-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalPrice = document.getElementById('modal-price');
+  const modalDuration = document.getElementById('modal-duration');
+
+  window.openProductModal = function (productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    modalTitle.textContent = product.title;
+    modalDesc.textContent = product.desc;
+    modalPrice.textContent = product.price;
+    modalDuration.textContent = product.duration || 'ماهانه';
+    productModal.classList.remove('hidden');
+  };
+
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => productModal.classList.add('hidden'));
+  }
+  if (productModal) {
+    productModal.addEventListener('click', (e) => {
+      if (e.target === productModal) productModal.classList.add('hidden');
+    });
+  }
+
+  // Updated renderProducts to include click handler for modal
+  function renderProducts() {
+    if (!productsGrid) return;
+    productsGrid.innerHTML = products.map(product => `
+      <div class="product-card reveal" onclick="openProductModal(${product.id})">
+        <div class="product-icon" style="color: ${product.color}; box-shadow: 0 10px 30px -10px ${product.color}66;">
+          <i class="ph-fill ${product.icon}"></i>
+        </div>
+        <h3 class="product-title">${product.title}</h3>
+        <p class="product-desc">${product.desc}</p>
+        <div class="product-footer">
+          <span class="product-price">${product.price}</span>
+          <button class="btn-primary small" onclick="event.stopPropagation(); window.addToCart(${product.id})">افزودن به سبد خرید</button>
+        </div>
+      </div>
+    `).join('');
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
 
   async function fetchProducts() {
     // Immediately render initial products (fast)

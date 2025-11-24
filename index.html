@@ -47,6 +47,20 @@
           <span id="cart-count" class="cart-count hidden">0</span>
         </button>
 
+        <button id="logout-btn" class="btn-secondary small" aria-label="Logout">
+          <i class="ph-fill ph-sign-out" style="color: #e53e3e;"></i>
+        </button>
+
+        <!-- Product Detail Modal -->
+        <div id="product-modal" class="modal hidden">
+          <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-desc"></p>
+            <p><strong>قیمت:</strong> <span id="modal-price"></span></p>
+            <p><strong>مدت اشتراک:</strong> <span id="modal-duration"></span></p>
+          </div>
+        </div>
         <button id="login-btn" class="btn-primary small">
           ورود / ثبت نام
         </button>
@@ -55,7 +69,7 @@
         <div id="user-profile" class="user-profile hidden">
           <img id="user-avatar" src="" alt="User Avatar">
           <span id="user-name"></span>
-          <button id="logout-btn" class="btn-secondary small">خروج</button>
+
           <button id="admin-dashboard-btn" class="btn-secondary small hidden">پنل ادمین</button>
         </div>
       </div>
