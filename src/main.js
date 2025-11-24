@@ -1,4 +1,5 @@
 import './style.css';
+import { initSilk } from './silk';
 // import { loginWithGoogle, logout, subscribeToAuthChanges } from './auth';
 // import { getProducts, addProduct as addDbProduct, addToCart as addToDbCart, getUserCart } from './db';
 
@@ -43,6 +44,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.documentElement.setAttribute('data-theme', savedTheme);
   updateThemeIcon(savedTheme);
 
+  // Initialize Silk Background
+  const silk = initSilk('silk-container', {
+    color: savedTheme === 'light' ? '#e2e8f0' : '#1e293b',
+    speed: 0.5,
+    scale: 2,
+    noiseIntensity: 0.5
+  });
+  window.silkInstance = silk;
+
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -50,6 +60,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       updateThemeIcon(newTheme);
+
+      // Update Silk Color
+      if (window.silkInstance) {
+        window.silkInstance.updateColor(newTheme === 'light' ? '#e2e8f0' : '#1e293b');
+      }
     });
   }
 
