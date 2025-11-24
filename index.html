@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flwy Shop | خدمات مجازی و پرمیوم</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&family=Outfit:wght@700;900&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+  <div id="silk-container" class="global-bg"></div>
+  <div id="app">
+    <header id="header">
+      <div class="container nav-content">
+        <a href="#" class="logo">
+          <i class="ph-fill ph-shopping-bag-open"></i>
+          Flwy Shop
+        </a>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#home">خانه</a></li>
+            <li><a href="#products">محصولات</a></li>
+            <li><a href="#about">درباره ما</a></li>
+            <li><a href="#contact">تماس</a></li>
+          </ul>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+          <i class="ph-fill ph-moon"></i>
+        </button>
+        <div class="user-actions">
+          <button id="cart-btn" class="icon-btn" aria-label="Cart">
+            <i class="ph-fill ph-shopping-cart"></i>
+            <span id="cart-count" class="badge hidden">0</span>
+          </button>
+          <button id="login-btn" class="btn-primary small">ورود / ثبت نام</button>
+          <div id="user-profile" class="hidden">
+            <img id="user-avatar" src="" alt="User" />
+            <div class="dropdown-menu">
+              <span id="user-name"></span>
+              <button id="admin-dashboard-btn" class="hidden">پنل ادمین</button>
+              <button id="logout-btn">خروج</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="cart-drawer">
+      <div class="cart-header">
+        <h3>سبد خرید</h3>
+        <button id="close-cart"><i class="ph-fill ph-x"></i></button>
+      </div>
+      <div id="cart-items" class="cart-items">
+        <!-- Cart items will be injected here -->
+        <p class="empty-cart">سبد خرید خالی است</p>
+      </div>
+      <div class="cart-footer">
+        <div class="total">
+          <span>جمع کل:</span>
+          <span id="cart-total">0 تومان</span>
+        </div>
+        <button id="checkout-btn" class="btn-primary full-width">تکمیل خرید</button>
+      </div>
+    </div>
+    <div id="cart-overlay" class="overlay"></div>
+
+    <!-- Support Widget -->
+    <button id="support-btn" class="support-btn" aria-label="Support">
+      <i class="ph-fill ph-chat-circle-text"></i>
+    </button>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="container hero-content reveal">
+          <h1 class="hero-title">دنیای خدمات مجازی<br>در دستان شما</h1>
+          <p class="hero-subtitle">خرید آسان و سریع اکانت‌های پرمیوم، گیفت کارت و اشتراک‌های بین‌المللی با بهترین قیمت
+          </p>
+          <a href="#products" class="cta-button glass">مشاهده محصولات</a>
+        </div>
+      </section>
+
+      <section id="products" class="section">
+        <div class="container">
+          <h2 class="section-title reveal">محصولات ویژه</h2>
+          <div id="products-grid" class="products-grid">
+            <!-- Products will be injected here via JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="glass">
+      <div class="container">
+        <p>&copy; 2024 Flwy Shop. تمامی حقوق محفوظ است.</p>
+      </div>
+    </footer>
+
+    <!-- Admin Modal -->
+    <div id="admin-modal" class="modal hidden">
+      <div class="modal-content glass-card">
+        <div class="modal-header">
+          <h3>افزودن محصول جدید</h3>
+          <button id="close-admin-modal" class="icon-btn"><i class="ph-fill ph-x"></i></button>
+        </div>
+        <form id="add-product-form">
+          <input type="text" id="p-title" placeholder="نام محصول" required>
+          <input type="text" id="p-desc" placeholder="توضیحات" required>
+          <input type="text" id="p-price" placeholder="قیمت (مثلا: ۱۰۰,۰۰۰ تومان)" required>
+          <input type="text" id="p-icon" placeholder="نام آیکون (مثلا: ph-star)" required>
+          <input type="color" id="p-color" value="#3b82f6">
+          <button type="submit" class="btn-primary full-width">افزودن محصول</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div id="support-modal" class="modal hidden">
+      <div class="modal-content glass-card">
+        <div class="modal-header">
+          <h3>پشتیبانی آنلاین</h3>
+          <button id="close-support-modal" class="icon-btn"><i class="ph-fill ph-x"></i></button>
+        </div>
+        <div class="chat-box">
+          <div class="message system">
+            <p>سلام! چطور میتونم کمکتون کنم؟</p>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" placeholder="پیام خود را بنویسید...">
+          <button class="icon-btn"><i class="ph-fill ph-paper-plane-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
