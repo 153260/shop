@@ -290,20 +290,47 @@ header.scrolled {
 }
 
 .product-card {
-  background: rgba(15, 23, 42, 0.6);
-  /* Darker background like screenshot */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.4);
+  /* More transparent */
+  backdrop-filter: blur(20px) saturate(180%);
+  /* Stronger blur & saturation */
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  /* Top light reflection */
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  /* Left light reflection */
   border-radius: 24px;
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  /* Deep shadow */
+}
+
+/* Glass Reflection Shine */
+.product-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: skewX(-25deg);
+  transition: 0.5s;
+  pointer-events: none;
+}
+
+.product-card:hover::after {
+  left: 150%;
+  /* Shine effect on hover */
+  transition: 0.7s ease-in-out;
 }
 
 .product-card::before {
