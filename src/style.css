@@ -112,32 +112,33 @@ header.scrolled {
   align-items: center;
 }
 
+/* Logo Styling */
 .logo {
   font-family: 'Outfit', sans-serif;
   font-size: 1.8rem;
   font-weight: 900;
-  background: linear-gradient(135deg, var(--accent-color), #60a5fa);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  letter-spacing: -1px;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
+  letter-spacing: -0.5px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .logo:hover {
   transform: scale(1.05);
-  filter: brightness(1.2);
 }
 
 .logo i {
-  background: linear-gradient(135deg, var(--accent-color), #60a5fa);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 2rem;
+  color: var(--accent-color);
+  -webkit-text-fill-color: var(--accent-color);
+  filter: drop-shadow(0 0 10px var(--accent-glow));
 }
 
 .nav-links {

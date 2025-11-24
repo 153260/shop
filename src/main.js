@@ -1,393 +1,333 @@
-import './style.css'
-import { initSilk } from './silk.js'
+import './style.css';
+// import { loginWithGoogle, logout, subscribeToAuthChanges } from './auth';
+// import { getProducts, addProduct as addDbProduct, addToCart as addToDbCart, getUserCart } from './db';
 
-// TODO: Uncomment these after configuring Firebase in firebase-config.js
-// import { loginWithGoogle, logout, subscribeToAuthChanges } from './auth.js';
-// import { addToCart as addToDbCart, addProduct as addDbProduct } from './db.js';
-
-// Temporary placeholders
-const loginWithGoogle = null;
+// Placeholder for missing Firebase config (Hybrid Mode)
+const loginWithGoogle = null; // Will use mock login
 const logout = null;
 const subscribeToAuthChanges = null;
-const addToDbCart = null;
+const getProducts = null;
 const addDbProduct = null;
+const addToDbCart = null;
+const getUserCart = null;
 
-// State
+// --- State Management ---
 let currentUser = null;
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('local_cart')) || [];
+let products = [];
 
-// Product Data
-const products = [
-  {
-    id: 1,
-    title: 'اشتراک تلگرام پرمیوم',
-    description: 'دسترسی به امکانات ویژه تلگرام، استیکرهای متحرک و آپلود فایل‌های حجیم',
-    price: '۲۹۰,۰۰۰ تومان',
-    icon: 'ph-telegram-logo',
-    color: '#229ED9'
-  },
-  {
-    id: 2,
-    title: 'اشتراک ChatGPT Plus',
-    description: 'دسترسی به مدل GPT-4، سرعت بالاتر و پلاگین‌های اختصاصی',
-    price: '۹۸۰,۰۰۰ تومان',
-    icon: 'ph-robot',
-    color: '#10A37F'
-  },
-  {
-    id: 3,
-    title: 'اکانت Cursor Pro',
-    description: 'ادیتور هوشمند با قابلیت‌های پیشرفته هوش مصنوعی برای برنامه‌نویسان',
-    price: '۵۵۰,۰۰۰ تومان',
-    icon: 'ph-code',
-    color: '#3b82f6'
-  },
-  {
-    id: 4,
-    title: 'گیفت کارت اپل',
-    description: 'شارژ حساب اپل آیدی برای خرید برنامه، بازی و اشتراک‌های اپل',
-    price: 'از ۵ دلار',
-    icon: 'ph-apple-logo',
-    color: '#A2AAAD'
-  },
-  {
-    id: 5,
-    title: 'اشتراک اسپاتیفای',
-    description: 'پخش موسیقی بدون تبلیغات، کیفیت بالا و دانلود آفلاین',
-    price: '۱۲۰,۰۰۰ تومان',
-    icon: 'ph-spotify-logo',
-    color: '#1DB954'
-  },
-  {
-    id: 6,
-    title: 'اشتراک نتفلیکس',
-    description: 'تماشای نامحدود فیلم و سریال با کیفیت 4K و زیرنویس فارسی',
-    price: '۱۵۰,۰۰۰ تومان',
-    icon: 'ph-film-strip',
-    color: '#E50914'
-  },
-  {
-    id: 7,
-    title: 'اشتراک یوتیوب پرمیوم',
-    description: 'تماشای بدون تبلیغات، پخش در پس‌زمینه و دسترسی به یوتیوب موزیک',
-    price: '۱۱۰,۰۰۰ تومان',
-    icon: 'ph-youtube-logo',
-    color: '#FF0000'
-  },
-  {
-    id: 8,
-    title: 'لایسنس ویندوز ۱۱',
-    description: 'لایسنس اورجینال ویندوز ۱۱ پرو، فعال‌سازی دائمی و قانونی',
-    price: '۴۵۰,۰۰۰ تومان',
-    icon: 'ph-windows-logo',
-    color: '#0078D6'
-  },
-  {
-    id: 9,
-    title: 'اکانت تریدینگ ویو',
-    description: 'دسترسی به ابزارهای تحلیل تکنیکال پیشرفته برای تریدرها',
-    price: '۳۹۰,۰۰۰ تومان',
-    icon: 'ph-chart-line-up',
-    color: '#131722'
-  }
-];
-
-// Render Products
-function renderProducts() {
-  const productsGrid = document.getElementById('products-grid');
-  if (!productsGrid) {
-    console.error('products-grid element not found!');
-    return;
-  }
-  productsGrid.innerHTML = products.map(product => `
-    <div class="glass-card product-card reveal">
-      <div class="product-icon" style="color: ${product.color}">
-        <i class="ph-fill ${product.icon}"></i>
-      </div>
-      <h3 class="product-title">${product.title}</h3>
-      <p class="product-desc">${product.description}</p>
-      <div class="product-price">${product.price}</div>
-      <button class="buy-btn" onclick="window.addToCart(${product.id})">افزودن به سبد خرید</button>
-    </div>
-  `).join('');
-}
-
-// Cart Logic
-window.addToCart = (productId) => {
-  const product = products.find(p => p.id === productId);
-  if (!product) return;
-
-  const existingItem = cart.find(item => item.id === productId);
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cart.push({ ...product, quantity: 1 });
-  }
-
-  updateCartUI();
-  openCart();
-
-  // If logged in, sync with DB (Optional for now, keeping local state primary for speed)
-  if (currentUser && addToDbCart) {
-    addToDbCart(currentUser.uid, product);
-  }
-};
-
-function updateCartUI() {
-  const cartItemsContainer = document.getElementById('cart-items');
-  const cartCount = document.getElementById('cart-count');
-  const cartTotal = document.getElementById('cart-total');
-
-  // Update Badge
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  cartCount.textContent = totalItems;
-  if (totalItems > 0) {
-    cartCount.classList.remove('hidden');
-  } else {
-    cartCount.classList.add('hidden');
-  }
-
-  // Update Items
-  if (cart.length === 0) {
-    cartItemsContainer.innerHTML = '<p class="empty-cart">سبد خرید خالی است</p>';
-    cartTotal.textContent = '0 تومان';
-    return;
-  }
-
-  cartItemsContainer.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="cart-item-details">
-        <h4 class="cart-item-title">${item.title}</h4>
-        <div class="cart-item-price">${item.price} x ${item.quantity}</div>
-      </div>
-      <button class="icon-btn" onclick="window.removeFromCart(${item.id})">
-        <i class="ph-fill ph-trash"></i>
-      </button>
-    </div>
-  `).join('');
-
-  // Calculate Total (Simplified logic for string prices)
-  // Note: In a real app, prices should be numbers.
-  // For now, we just show "Calculated at checkout" or similar if parsing is hard.
-  // Let's try to parse the Persian numbers/commas.
-  // For this demo, I'll just show the item count in total for simplicity or 0.
-  cartTotal.textContent = `${totalItems} محصول`;
-}
-
-window.removeFromCart = (productId) => {
-  cart = cart.filter(item => item.id !== productId);
-  updateCartUI();
-};
-
-function openCart() {
-  document.getElementById('cart-drawer').classList.add('open');
-  document.getElementById('cart-overlay').classList.add('active');
-}
-
-function closeCart() {
-  document.getElementById('cart-drawer').classList.remove('open');
-  document.getElementById('cart-overlay').classList.remove('active');
-}
-
-// Scroll Animation
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: "0px 0px -50px 0px"
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('active');
-    } else {
-      entry.target.classList.remove('active'); // Bi-directional animation
-    }
-  });
-}, observerOptions);
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  // Theme Toggle
+// --- DOM Elements ---
+document.addEventListener('DOMContentLoaded', async () => {
+  const app = document.getElementById('app');
   const themeToggle = document.getElementById('theme-toggle');
-  const body = document.body;
-  const icon = themeToggle.querySelector('i');
-
-  // Check local storage
-  const currentTheme = localStorage.getItem('theme');
-  if (currentTheme) {
-    body.setAttribute('data-theme', currentTheme);
-    if (currentTheme === 'light') {
-      icon.classList.replace('ph-moon', 'ph-sun');
-    }
-  }
-
-  themeToggle.addEventListener('click', () => {
-    const isDark = !body.hasAttribute('data-theme');
-
-    if (isDark) {
-      body.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-      icon.classList.replace('ph-moon', 'ph-sun');
-      if (window.silkInstance) window.silkInstance.updateColor('#e2e8f0');
-    } else {
-      body.removeAttribute('data-theme');
-      localStorage.removeItem('theme');
-      icon.classList.replace('ph-sun', 'ph-moon');
-      if (window.silkInstance) window.silkInstance.updateColor('#1e293b');
-    }
-  });
-
-  // Initialize Silk Background
-  const silk = initSilk('silk-container', {
-    color: currentTheme === 'light' ? '#e2e8f0' : '#1e293b',
-    speed: 0.5,
-    scale: 2,
-    noiseIntensity: 0.5
-  });
-  window.silkInstance = silk;
-
-  renderProducts();
-
-  // Observe elements
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // Header scroll effect
-  const header = document.getElementById('header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  });
-
-  // Auth & UI Event Listeners
   const loginBtn = document.getElementById('login-btn');
-  const logoutBtn = document.getElementById('logout-btn');
   const userProfile = document.getElementById('user-profile');
   const userAvatar = document.getElementById('user-avatar');
   const userName = document.getElementById('user-name');
+  const logoutBtn = document.getElementById('logout-btn');
+  const cartBtn = document.getElementById('cart-btn');
+  const cartCount = document.getElementById('cart-count');
+  const cartDrawer = document.getElementById('cart-drawer');
+  const closeCartBtn = document.getElementById('close-cart');
+  const cartOverlay = document.getElementById('cart-overlay');
+  const cartItemsContainer = document.getElementById('cart-items');
+  const cartTotal = document.getElementById('cart-total');
+  const productsGrid = document.getElementById('products-grid');
+  const adminDashboardBtn = document.getElementById('admin-dashboard-btn');
+  const adminModal = document.getElementById('admin-modal');
+  const closeAdminModal = document.getElementById('close-admin-modal');
+  const addProductForm = document.getElementById('add-product-form');
 
-  loginBtn.addEventListener('click', async () => {
-    if (!loginWithGoogle) {
-      alert('Firebase is not configured. Please configure Firebase in firebase-config.js');
-      return;
-    }
-    try {
-      await loginWithGoogle();
-    } catch (error) {
-      alert('Login failed. Please check console.');
-    }
-  });
+  // --- Theme Toggle ---
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
 
-  logoutBtn.addEventListener('click', async () => {
-    if (logout) {
-      await logout();
-    }
-  });
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+  }
 
-  // Auth State Observer
+  function updateThemeIcon(theme) {
+    if (!themeToggle) return;
+    const icon = themeToggle.querySelector('i');
+    if (icon) icon.className = theme === 'dark' ? 'ph-fill ph-moon' : 'ph-fill ph-sun';
+  }
+
+  // --- Auth Logic (Hybrid: Firebase + Mock) ---
+  // Try to subscribe to Firebase Auth
   if (subscribeToAuthChanges) {
-    subscribeToAuthChanges((user) => {
-      currentUser = user;
-      if (user) {
-        loginBtn.classList.add('hidden');
-        userProfile.classList.remove('hidden');
-        userAvatar.src = user.photoURL;
-        userName.textContent = user.displayName;
+    subscribeToAuthChanges(async (user) => {
+      handleUserAuth(user);
+    });
+  } else {
+    // Check for mock user in localStorage
+    const mockUser = JSON.parse(localStorage.getItem('mock_user'));
+    if (mockUser) handleUserAuth(mockUser);
+  }
 
-        // Simple Admin Check (Replace with real role check)
-        // For demo: Allow anyone to see admin button if logged in
-        document.getElementById('admin-dashboard-btn').classList.remove('hidden');
+  async function handleUserAuth(user) {
+    currentUser = user;
+    if (user) {
+      if (loginBtn) loginBtn.classList.add('hidden');
+      if (userProfile) userProfile.classList.remove('hidden');
+      if (userAvatar) userAvatar.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + (user.displayName || 'User');
+      if (userName) userName.textContent = user.displayName || 'کاربر عزیز';
+
+      // Admin Check (Replace with real admin email later)
+      // For now, allow anyone to see admin button if they are logged in (for demo) 
+      if (user.email && adminDashboardBtn) {
+        // adminDashboardBtn.classList.remove('hidden'); // Uncomment to enable for all logged in users
+      }
+
+      // Load Cart
+      if (getUserCart) {
+        try {
+          const dbCart = await getUserCart(user.uid);
+          if (dbCart) cart = dbCart;
+        } catch (e) { console.log('Using local cart'); }
+      }
+    } else {
+      if (loginBtn) loginBtn.classList.remove('hidden');
+      if (userProfile) userProfile.classList.add('hidden');
+      cart = JSON.parse(localStorage.getItem('local_cart')) || [];
+    }
+    updateCartUI();
+  }
+
+  if (loginBtn) {
+    loginBtn.addEventListener('click', async () => {
+      if (loginWithGoogle) {
+        try {
+          await loginWithGoogle();
+        } catch (error) {
+          console.error("Firebase Login Failed:", error);
+          mockLogin();
+        }
       } else {
-        loginBtn.classList.remove('hidden');
-        userProfile.classList.add('hidden');
-        userAvatar.src = '';
-        userName.textContent = '';
-        document.getElementById('admin-dashboard-btn').classList.add('hidden');
+        mockLogin();
       }
     });
   }
 
-  // Cart Events
-  document.getElementById('cart-btn').addEventListener('click', openCart);
-  document.getElementById('close-cart').addEventListener('click', closeCart);
-  document.getElementById('cart-overlay').addEventListener('click', closeCart);
-
-  // Admin Modal Logic
-  const adminModal = document.getElementById('admin-modal');
-  const adminBtn = document.getElementById('admin-dashboard-btn');
-  const closeAdminBtn = document.getElementById('close-admin-modal');
-  const addProductForm = document.getElementById('add-product-form');
-
-  adminBtn.addEventListener('click', () => {
-    adminModal.classList.remove('hidden');
-  });
-
-  closeAdminBtn.addEventListener('click', () => {
-    adminModal.classList.add('hidden');
-  });
-
-  addProductForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const title = document.getElementById('p-title').value;
-    const desc = document.getElementById('p-desc').value;
-    const price = document.getElementById('p-price').value;
-    const icon = document.getElementById('p-icon').value;
-    const color = document.getElementById('p-color').value;
-
-    const newProduct = {
-      title,
-      description: desc,
-      price,
-      icon,
-      color,
-      id: Date.now() // Temporary ID
+  function mockLogin() {
+    const mockUser = {
+      uid: 'mock_' + Date.now(),
+      displayName: 'کاربر تستی',
+      email: 'user@example.com',
+      photoURL: 'https://ui-avatars.com/api/?name=Test+User&background=random'
     };
+    localStorage.setItem('mock_user', JSON.stringify(mockUser));
+    handleUserAuth(mockUser);
+    alert('لاگین آزمایشی انجام شد (Firebase تنظیم نشده است)');
+  }
 
-    // Add to local state
-    products.push(newProduct);
-    renderProducts();
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      if (logout) await logout();
+      localStorage.removeItem('mock_user');
+      currentUser = null;
+      window.location.reload();
+    });
+  }
 
-    // Re-observe new elements for scroll animation
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  // --- Products Logic ---
+  // Initial Mock Products
+  const initialProducts = [
+    { id: 1, title: 'Spotify Premium', price: '۱۲۰,۰۰۰ تومان', icon: 'ph-spotify-logo', desc: 'اشتراک ۱ ماهه پرمیوم اسپاتیفای', color: '#1db954' },
+    { id: 2, title: 'Netflix 4K', price: '۳۵۰,۰۰۰ تومان', icon: 'ph-film-strip', desc: 'اشتراک ۱ ماهه نتفلیکس اولترا', color: '#e50914' },
+    { id: 3, title: 'Apple Music', price: '۱۵۰,۰۰۰ تومان', icon: 'ph-music-notes', desc: 'اشتراک ۱ ماهه اپل موزیک', color: '#fa2d48' },
+    { id: 4, title: 'YouTube Premium', price: '۹۰,۰۰۰ تومان', icon: 'ph-youtube-logo', desc: 'اشتراک ۱ ماهه یوتیوب بدون تبلیغ', color: '#ff0000' },
+    { id: 5, title: 'Telegram Premium', price: '۲۰۰,۰۰۰ تومان', icon: 'ph-telegram-logo', desc: 'اشتراک ۳ ماهه تلگرام پرمیوم', color: '#229ED9' },
+    { id: 6, title: 'PlayStation Plus', price: '۴۵۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری پلی‌استیشن', color: '#00439c' },
+  ];
 
-    // Add to DB if Firebase is configured
-    if (addDbProduct) {
+  async function fetchProducts() {
+    products = initialProducts;
+    if (getProducts) {
       try {
-        await addDbProduct(newProduct);
-        alert('محصول با موفقیت اضافه شد و در دیتابیس ذخیره شد!');
-      } catch (error) {
-        console.error(error);
-        alert('محصول اضافه شد ولی در دیتابیس ذخیره نشد');
-      }
+        const dbProducts = await getProducts();
+        if (dbProducts && dbProducts.length > 0) {
+          products = [...initialProducts, ...dbProducts];
+        }
+      } catch (e) { console.log('Fetching local products only'); }
+    }
+    renderProducts();
+  }
+
+  function renderProducts() {
+    if (!productsGrid) return;
+    productsGrid.innerHTML = products.map(product => `
+      <div class="product-card reveal">
+        <div class="product-icon" style="color: ${product.color}; box-shadow: 0 10px 30px -10px ${product.color}66;">
+          <i class="ph-fill ${product.icon}"></i>
+        </div>
+        <h3 class="product-title">${product.title}</h3>
+        <p class="product-desc">${product.desc}</p>
+        <div class="product-footer">
+          <span class="product-price">${product.price}</span>
+          <button class="btn-primary small" onclick="window.addToCart(${product.id})">
+            افزودن <i class="ph-bold ph-plus"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Re-observe for animations
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  // --- Cart Logic ---
+  window.addToCart = async (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+      existingItem.quantity += 1;
     } else {
-      alert('محصول به صورت موقت اضافه شد (فقط در این session)');
+      cart.push({ ...product, quantity: 1 });
     }
 
-    adminModal.classList.add('hidden');
-    addProductForm.reset();
-  });
+    updateCartUI();
+    openCart();
 
-  // Support Button - Opens Goftino Widget
+    // Persist
+    if (currentUser && addToDbCart) {
+      try { await addToDbCart(currentUser.uid, cart); } catch (e) { }
+    }
+    localStorage.setItem('local_cart', JSON.stringify(cart));
+  };
+
+  function updateCartUI() {
+    if (!cartCount || !cartItemsContainer || !cartTotal) return;
+
+    cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.classList.toggle('hidden', cart.length === 0);
+
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = '<p class="empty-cart">سبد خرید خالی است</p>';
+      cartTotal.textContent = '0 تومان';
+      return;
+    }
+
+    cartItemsContainer.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="item-info">
+          <h4>${item.title}</h4>
+          <span class="item-price">${item.price} x ${item.quantity}</span>
+        </div>
+        <button class="remove-btn" onclick="window.removeFromCart(${item.id})">
+          <i class="ph-fill ph-trash"></i>
+        </button>
+      </div>
+    `).join('');
+
+    // Simple total calculation (parsing string price)
+    const total = cart.reduce((sum, item) => {
+      const price = parseInt(item.price.replace(/[^0-9]/g, ''));
+      return sum + (price * item.quantity);
+    }, 0);
+    cartTotal.textContent = total.toLocaleString() + ' تومان';
+  }
+
+  window.removeFromCart = (productId) => {
+    cart = cart.filter(item => item.id !== productId);
+    updateCartUI();
+    localStorage.setItem('local_cart', JSON.stringify(cart));
+    if (currentUser && addToDbCart) {
+      addToDbCart(currentUser.uid, cart).catch(() => { });
+    }
+  };
+
+  function openCart() {
+    if (cartDrawer) cartDrawer.classList.add('open');
+    if (cartOverlay) cartOverlay.classList.add('active');
+  }
+
+  function closeCart() {
+    if (cartDrawer) cartDrawer.classList.remove('open');
+    if (cartOverlay) cartOverlay.classList.remove('active');
+  }
+
+  if (cartBtn) cartBtn.addEventListener('click', openCart);
+  if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+  if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+  // --- Admin Logic ---
+  // Enable Admin Button via Console for now: window.enableAdmin()
+  window.enableAdmin = () => {
+    if (adminDashboardBtn) adminDashboardBtn.classList.remove('hidden');
+    alert('پنل ادمین فعال شد');
+  };
+
+  if (adminDashboardBtn) {
+    adminDashboardBtn.addEventListener('click', () => {
+      if (adminModal) adminModal.classList.remove('hidden');
+    });
+  }
+
+  if (closeAdminModal) {
+    closeAdminModal.addEventListener('click', () => {
+      if (adminModal) adminModal.classList.add('hidden');
+    });
+  }
+
+  if (addProductForm) {
+    addProductForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newProduct = {
+        id: Date.now(),
+        title: document.getElementById('p-title').value,
+        desc: document.getElementById('p-desc').value,
+        price: document.getElementById('p-price').value,
+        icon: document.getElementById('p-icon').value,
+        color: document.getElementById('p-color').value
+      };
+
+      products.push(newProduct);
+      renderProducts();
+
+      if (addDbProduct) {
+        try { await addDbProduct(newProduct); } catch (e) { }
+      }
+
+      if (adminModal) adminModal.classList.add('hidden');
+      addProductForm.reset();
+      alert('محصول اضافه شد!');
+    });
+  }
+
+  // --- Support Button ---
   const supportBtn = document.getElementById('support-btn');
   if (supportBtn) {
     supportBtn.addEventListener('click', () => {
-      // Method 1: Try Goftino API
       if (typeof Goftino !== 'undefined' && Goftino.open) {
         Goftino.open();
-      }
-      // Method 2: Try clicking the Goftino widget button
-      else {
-        const goftinoBtn = document.querySelector('.goftino-widget-button, #goftino-widget-button, [class*="goftino"]');
-        if (goftinoBtn) {
-          goftinoBtn.click();
-        } else {
-          // Fallback: Show message
-          console.log('Goftino widget not found. Please wait for it to load.');
-          alert('پشتیبانی آنلاین در حال بارگذاری است. لطفاً چند لحظه صبر کنید.');
-        }
+      } else {
+        const goftinoBtn = document.querySelector('.goftino-widget-button, #goftino-widget-button');
+        if (goftinoBtn) goftinoBtn.click();
+        else alert('پشتیبانی در حال بارگذاری...');
       }
     });
   }
+
+  // --- Scroll Animation ---
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Initialize
+  fetchProducts();
 });
