@@ -1,16 +1,7 @@
 import './style.css';
 import { initSilk } from './silk';
-// import { loginWithGoogle, logout, subscribeToAuthChanges } from './auth';
-// import { getProducts, addProduct as addDbProduct, addToCart as addToDbCart, getUserCart } from './db';
-
-// Placeholder for missing Firebase config (Hybrid Mode)
-const loginWithGoogle = null; // Will use mock login
-const logout = null;
-const subscribeToAuthChanges = null;
-const getProducts = null;
-const addDbProduct = null;
-const addToDbCart = null;
-const getUserCart = null;
+import { loginWithGoogle, logout, subscribeToAuthChanges } from './auth';
+import { getProducts, addProduct as addDbProduct, addToCart as addToDbCart, getUserCart } from './db';
 
 // --- State Management ---
 let currentUser = null;
@@ -74,17 +65,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (icon) icon.className = theme === 'dark' ? 'ph-fill ph-moon' : 'ph-fill ph-sun';
   }
 
-  // --- Auth Logic (Hybrid: Firebase + Mock) ---
-  // Try to subscribe to Firebase Auth
-  if (subscribeToAuthChanges) {
-    subscribeToAuthChanges(async (user) => {
-      handleUserAuth(user);
-    });
-  } else {
-    // Check for mock user in localStorage
-    const mockUser = JSON.parse(localStorage.getItem('mock_user'));
-    if (mockUser) handleUserAuth(mockUser);
-  }
+  // --- Auth Logic (Real Firebase) ---
+  subscribeToAuthChanges(async (user) => {
+    handleUserAuth(user);
+  });
 
   async function handleUserAuth(user) {
     currentUser = user;
@@ -95,18 +79,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (userName) userName.textContent = user.displayName || 'کاربر عزیز';
 
       // Admin Check (Replace with real admin email later)
-      // For now, allow anyone to see admin button if they are logged in (for demo) 
+      // For now, allow anyone to see admin button if they are logged in (for demo)
       if (user.email && adminDashboardBtn) {
         // adminDashboardBtn.classList.remove('hidden'); // Uncomment to enable for all logged in users
       }
 
-      // Load Cart
-      if (getUserCart) {
-        try {
-          const dbCart = await getUserCart(user.uid);
-          if (dbCart) cart = dbCart;
-        } catch (e) { console.log('Using local cart'); }
-      }
+      // Load Cart from DB
+      try {
+        const dbCart = await getUserCart(user.uid);
+        if (dbCart) cart = dbCart;
+      } catch (e) { console.log('Error loading cart:', e); }
     } else {
       if (loginBtn) loginBtn.classList.remove('hidden');
       if (userProfile) userProfile.classList.add('hidden');
@@ -117,35 +99,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (loginBtn) {
     loginBtn.addEventListener('click', async () => {
-      if (loginWithGoogle) {
-        try {
-          await loginWithGoogle();
-        } catch (error) {
-          console.error("Firebase Login Failed:", error);
-          mockLogin();
-        }
-      } else {
-        mockLogin();
+      try {
+        await loginWithGoogle();
+      } catch (error) {
+        console.error("Login Failed:", error);
+        alert('خطا در ورود: لطفاً تنظیمات فایربیس را بررسی کنید.');
       }
     });
   }
 
-  function mockLogin() {
-    const mockUser = {
-      uid: 'mock_' + Date.now(),
-      displayName: 'کاربر تستی',
-      email: 'user@example.com',
-      photoURL: 'https://ui-avatars.com/api/?name=Test+User&background=random'
-    };
-    localStorage.setItem('mock_user', JSON.stringify(mockUser));
-    handleUserAuth(mockUser);
-    alert('لاگین آزمایشی انجام شد (Firebase تنظیم نشده است)');
-  }
-
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-      if (logout) await logout();
-      localStorage.removeItem('mock_user');
+      await logout();
       currentUser = null;
       window.location.reload();
     });
