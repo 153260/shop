@@ -206,8 +206,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!product) return;
     // Store selected product in localStorage for the detail page
     localStorage.setItem('selectedProduct', JSON.stringify(product));
-    // Navigate to product detail page
-    window.location.href = `product.html?id=${productId}`;
+    // Open product detail page in a new tab
+    window.open(`product.html?id=${productId}`, '_blank');
   };
 
   // Updated renderProducts to use openProductPage
