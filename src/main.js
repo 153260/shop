@@ -160,6 +160,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     { id: 4, title: 'YouTube Premium', price: '۹۰,۰۰۰ تومان', icon: 'ph-youtube-logo', desc: 'اشتراک ۱ ماهه یوتیوب بدون تبلیغ', color: '#ff0000' },
     { id: 5, title: 'Telegram Premium', price: '۲۰۰,۰۰۰ تومان', icon: 'ph-telegram-logo', desc: 'اشتراک ۳ ماهه تلگرام پرمیوم', color: '#229ED9' },
     { id: 6, title: 'PlayStation Plus', price: '۴۵۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری پلی‌استیشن', color: '#00439c' },
+    { id: 7, title: 'Xbox Game Pass', price: '۳۸۰,۰۰۰ تومان', icon: 'ph-xbox-logo', desc: 'اشتراک ۱ ماهه گیم پس آلتیمیت', color: '#107C10' },
+    { id: 8, title: 'Discord Nitro', price: '۲۵۰,۰۰۰ تومان', icon: 'ph-discord-logo', desc: 'اشتراک ۱ ماهه دیسکورد نیترو', color: '#5865F2' },
+    { id: 9, title: 'ChatGPT Plus', price: '۹۵۰,۰۰۰ تومان', icon: 'ph-robot', desc: 'اشتراک ۱ ماهه چت جی‌پی‌تی پلاس', color: '#10a37f' },
+    { id: 10, title: 'Steam Wallet', price: '۵۰۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری استیم', color: '#1b2838' },
   ];
 
   async function fetchProducts() {
