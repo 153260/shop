@@ -645,6 +645,54 @@ footer {
   }
 }
 
+/* Product Detail Page Styles */
+.product-detail {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.6);
+  /* dark glass background */
+  backdrop-filter: blur(12px);
+  padding: 2rem;
+}
+
+.product-info {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  padding: 2rem 3rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.product-info h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.product-info p {
+  margin: 0.5rem 0;
+  color: #e5e7eb;
+}
+
+.product-info span {
+  font-weight: 600;
+  color: #10b981;
+  /* teal */
+}
+
+#add-to-cart-detail {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
 /* Floating Support Button */
 .floating-support-btn {
   position: fixed;

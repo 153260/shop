@@ -206,15 +206,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!product) return;
     // Store selected product in localStorage for the detail page
     localStorage.setItem('selectedProduct', JSON.stringify(product));
-    // Open product detail page in a new tab
-    window.open(`product.html?id=${productId}`, '_blank');
+    // Navigate to product detail page in the same tab
+    window.location.href = `product.html?id=${productId}`;
   };
 
-  // Updated renderProducts to use openProductPage
+  // Updated renderProducts to use data-id and attach click listeners
   function renderProducts() {
     if (!productsGrid) return;
+    // Render cards with data-id (no inline onclick)
     productsGrid.innerHTML = products.map(product => `
-      <div class="product-card reveal" onclick="openProductPage(${product.id})">
+      <div class="product-card reveal" data-id="${product.id}">
         <div class="product-icon" style="color: ${product.color}; box-shadow: 0 10px 30px -10px ${product.color}66;">
           <i class="ph-fill ${product.icon}"></i>
         </div>
@@ -226,6 +227,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       </div>
     `).join('');
+    // Attach click listeners to each card to open product page in new tab
+    document.querySelectorAll('.product-card').forEach(card => {
+      const id = Number(card.dataset.id);
+      card.addEventListener('click', () => openProductPage(id));
+    });
+    // Observe reveal animations
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
 
