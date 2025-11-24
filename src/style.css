@@ -620,6 +620,31 @@ footer {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Highlight text (blue) */
+.highlight {
+  color: #3b82f6;
+  /* Tailwind blue-500 */
+}
+
+/* Mobile cart drawer adjustments */
+@media (max-width: 768px) {
+  .cart-drawer {
+    width: 90%;
+    max-width: 350px;
+    padding: 1rem;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item .remove-btn {
+    align-self: flex-end;
+    margin-top: 0.5rem;
+  }
+}
+
 /* Floating Support Button */
 .floating-support-btn {
   position: fixed;
