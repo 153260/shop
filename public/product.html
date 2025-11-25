@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>جزئیات محصول</title>
+    <link rel="stylesheet" href="src/style.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <div id="silk-container" class="global-bg"></div>
+    <div id="app">
+        <!-- Header (reuse same header) -->
+        <header>
+            <a href="#" class="logo"><i class="ph-fill ph-storefront"></i> Flwy Shop</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home" class="active">خانه</a></li>
+                    <li><a href="#products">محصولات</a></li>
+                    <li><a href="#about">درباره ما</a></li>
+                    <li><a href="https://t.me/FRBXK" target="_blank">تماس</a></li>
+                </ul>
+            </nav>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle Dark Mode"><i
+                        class="ph-fill ph-moon"></i></button>
+                <button id="cart-btn" class="icon-btn" aria-label="Cart"><i
+                        class="ph-fill ph-shopping-cart-simple"></i><span id="cart-count"
+                        class="cart-count hidden">0</span></button>
+                <button id="login-btn" class="btn-primary small">ورود / ثبت نام</button>
+                <div id="user-profile" class="user-profile hidden">
+                    <img id="user-avatar" src="" alt="User Avatar" />
+                    <span id="user-name"></span>
+                    <button id="logout-btn" class="btn-secondary small hidden" aria-label="Logout"><i
+                            class="ph-fill ph-sign-out" style="color:#e53e3e;"></i></button>
+                    <button id="admin-dashboard-btn" class="btn-secondary small hidden">پنل ادمین</button>
+                </div>
+            </div>
+        </header>
+        <main class="product-detail">
+            <section class="product-info">
+                <h2 id="detail-title"></h2>
+                <p id="detail-desc"></p>
+                <p><strong>قیمت:</strong> <span id="detail-price"></span></p>
+                <p><strong>مدت اشتراک:</strong> <span id="detail-duration"></span></p>
+                <button class="btn-primary small" id="add-to-cart-detail">افزودن به سبد خرید</button>
+            </section>
+        </main>
+        <footer class="glass">
+            <div class="container">
+                <p>&copy; 2024 Flwy Shop. تمامی حقوق محفوظ است.</p>
+            </div>
+        </footer>
+    </div>
+    <script type="module" src="src/product.js"></script>
+</body>
+
+</html>
