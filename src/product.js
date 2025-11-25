@@ -1,4 +1,15 @@
-// src/product.js
+// Initialize Silk background on product page
+const savedTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+import { initSilk } from './silk.js';
+const silk = initSilk('silk-container', {
+    color: savedTheme === 'light' ? '#e2e8f0' : '#1e293b',
+    speed: 0.5,
+    scale: 2,
+    noiseIntensity: 0.5
+});
+window.silkInstance = silk;
+
 import { addToDbCart, getUserCart } from './db.js';
 import { auth } from './firebase-config.js';
 

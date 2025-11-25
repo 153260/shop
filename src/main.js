@@ -150,16 +150,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --- Products Logic ---
   // Initial Mock Products with duration field
   const initialProducts = [
-    { id: 1, title: 'Spotify Premium', price: '۱۲۰,۰۰۰ تومان', icon: 'ph-spotify-logo', desc: 'اشتراک ۱ ماهه پرمیوم اسپاتیفای', color: '#1db954', duration: 'ماهانه' },
-    { id: 2, title: 'Netflix 4K', price: '۳۵۰,۰۰۰ تومان', icon: 'ph-film-strip', desc: 'اشتراک ۱ ماهه نتفلیکس اولترا', color: '#e50914', duration: 'ماهانه' },
-    { id: 3, title: 'Apple Music', price: '۱۵۰,۰۰۰ تومان', icon: 'ph-music-notes', desc: 'اشتراک ۱ ماهه اپل موزیک', color: '#fa2d48', duration: 'ماهانه' },
-    { id: 4, title: 'YouTube Premium', price: '۹۰,۰۰۰ تومان', icon: 'ph-youtube-logo', desc: 'اشتراک ۱ ماهه یوتیوب بدون تبلیغ', color: '#ff0000', duration: 'ماهانه' },
-    { id: 5, title: 'Telegram Premium', price: '۲۰۰,۰۰۰ تومان', icon: 'ph-telegram-logo', desc: 'اشتراک ۳ ماهه تلگرام پرمیوم', color: '#229ED9', duration: '۳ ماهه' },
-    { id: 6, title: 'PlayStation Plus', price: '۴۵۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری پلی‌استیشن', color: '#00439c', duration: 'یک‌بار' },
-    { id: 7, title: 'Xbox Game Pass', price: '۳۸۰,۰۰۰ تومان', icon: 'ph-xbox-logo', desc: 'اشتراک ۱ ماهه گیم پس آلتیمیت', color: '#107C10', duration: 'ماهانه' },
-    { id: 8, title: 'Discord Nitro', price: '۲۵۰,۰۰۰ تومان', icon: 'ph-discord-logo', desc: 'اشتراک ۱ ماهه دیسکورد نیترو', color: '#5865F2', duration: 'ماهانه' },
-    { id: 9, title: 'ChatGPT Plus', price: '۹۵۰,۰۰۰ تومان', icon: 'ph-robot', desc: 'اشتراک ۱ ماهه چت جی‌پی‌تی پلاس', color: '#10a37f', duration: 'ماهانه' },
-    { id: 10, title: 'Steam Wallet', price: '۵۰۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری استیم', color: '#1b2838', duration: 'یک‌بار' },
+    { id: 1, title: 'Spotify Premium', price: '۱۲۰,۰۰۰ تومان', icon: 'ph-spotify-logo', desc: 'اشتراک ۱ ماهه پرمیوم اسپاتیفای', color: '#1db954', duration: 'ماهانه', images: ['https://via.placeholder.com/400x250?text=Spotify+1', 'https://via.placeholder.com/400x250?text=Spotify+2'] },
+    { id: 2, title: 'Netflix 4K', price: '۳۵۰,۰۰۰ تومان', icon: 'ph-film-strip', desc: 'اشتراک ۱ ماهه نتفلیکس اولترا', color: '#e50914', duration: 'ماهانه', images: ['https://via.placeholder.com/400x250?text=Netflix+1', 'https://via.placeholder.com/400x250?text=Netflix+2'] },
+    { id: 3, title: 'Apple Music', price: '۱۵۰,۰۰۰ تومان', icon: 'ph-music-notes', desc: 'اشتراک ۱ ماهه اپل موزیک', color: '#fa2d48', duration: 'ماهانه', images: ['https://via.placeholder.com/400x250?text=Apple+Music+1', 'https://via.placeholder.com/400x250?text=Apple+Music+2'] },
+    { id: 4, title: 'YouTube Premium', price: '۹۰,۰۰۰ تومان', icon: 'ph-youtube-logo', desc: 'اشتراک ۱ ماهه یوتیوب بدون تبلیغ', color: '#ff0000', duration: 'ماهانه', images: ['https://via.placeholder.com/400x250?text=YouTube+1', 'https://via.placeholder.com/400x250?text=YouTube+2'] },
+    { id: 5, title: 'Telegram Premium', price: '۲۰۰,۰۰۰ تومان', icon: 'ph-telegram-logo', desc: 'اشتراک ۳ ماهه تلگرام پرمیوم', color: '#229ED9', duration: '۳ ماهه', images: ['https://via.placeholder.com/400x250?text=Telegram+1', 'https://via.placeholder.com/400x250?text=Telegram+2'] },
+    { id: 6, title: 'PlayStation Plus', price: '۴۵۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری پلی‌استیشن', color: '#00439c', duration: 'یک‌بار', images: ['https://via.placeholder.com/400x250?text=PlayStation+1', 'https://via.placeholder.com/400x250?text=PlayStation+2'] },
+    { id: 7, title: 'Xbox Game Pass', price: '۳۸۰,۰۰۰ تومان', icon: 'ph-xbox-logo', desc: 'اشتراک ۱ ماهه گیم پس آلتیمیت', color: '#107C10', duration: 'ماهانه', images: ['https://via.placeholder.com/400x250?text=Xbox+1', 'https://via.placeholder.com/400x250?text=Xbox+2'] },
+    { id: 8, title: 'Discord Nitro', price: '۲۵۰,۰۰۰ تومان', icon: 'ph-discord-logo', desc: 'اشتراک ۱ ماهه دیسکورد نیترو', color: '#5865F2', duration: 'ماهانه', images: ['https://via.placeholder.com/400x250?text=Discord+1', 'https://via.placeholder.com/400x250?text=Discord+2'] },
+    { id: 9, title: 'ChatGPT Plus', price: '۹۵۰,۰۰۰ تومان', icon: 'ph-robot', desc: 'اشتراک ۱ ماهه چت جی‌پی‌تی پلاس', color: '#10a37f', duration: 'ماهانه', images: ['https://via.placeholder.com/400x250?text=ChatGPT+1', 'https://via.placeholder.com/400x250?text=ChatGPT+2'] },
+    { id: 10, title: 'Steam Wallet', price: '۵۰۰,۰۰۰ تومان', icon: 'ph-game-controller', desc: 'گیفت کارت ۱۰ دلاری استیم', color: '#1b2838', duration: 'یک‌بار', images: ['https://via.placeholder.com/400x250?text=Steam+1', 'https://via.placeholder.com/400x250?text=Steam+2'] },
   ];
 
   // Admin visibility helper
@@ -202,18 +202,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // --- Product Page Navigation ---
   window.openProductPage = function (productId) {
-    // Access 'products' from the closure
-    const product = products.find(p => p.id === productId);
+    // Access 'products' from the closure (or global __allProducts)
+    const product = (window.__allProducts || products).find(p => p.id === productId);
     if (product) {
       localStorage.setItem('selectedProduct', JSON.stringify(product));
     }
-    window.location.href = `product.html?id=${productId}`;
+    // Open product detail page in a new tab/window
+    window.open(`product.html?id=${productId}`, '_blank');
   };
 
   function renderProducts() {
     if (!productsGrid) return;
     productsGrid.innerHTML = products.map(product => `
-      <div class="product-card reveal" data-product-id="${product.id}" style="cursor: pointer;">
+      <div class="product-card reveal" data-product-id="${product.id}" style="cursor: pointer;" onclick="window.openProductPage(${product.id})">
         <div class="product-icon" style="color: ${product.color}; box-shadow: 0 10px 30px -10px ${product.color}66;">
           <i class="ph-fill ${product.icon}"></i>
         </div>
@@ -226,14 +227,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     `).join('');
 
-    // Add click event listeners to each product card AFTER setting innerHTML
-    document.querySelectorAll('.product-card').forEach(card => {
-      card.addEventListener('click', function () {
-        const productId = Number(this.dataset.productId);
-        window.openProductPage(productId);
-      });
-    });
-
     // Observe reveal animations
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
@@ -242,6 +235,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function fetchProducts() {
     // Immediately render initial products (fast)
     products = initialProducts;
+    // expose globally for openProductPage
+    window.__allProducts = products;
     renderProducts();
 
     // Then fetch from Firebase in background (if available)
@@ -258,27 +253,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  function renderProducts() {
-    if (!productsGrid) return;
-    productsGrid.innerHTML = products.map(product => `
-      <div class="product-card reveal">
-        <div class="product-icon" style="color: ${product.color}; box-shadow: 0 10px 30px -10px ${product.color}66;">
-          <i class="ph-fill ${product.icon}"></i>
-        </div>
-        <h3 class="product-title">${product.title}</h3>
-        <p class="product-desc">${product.desc}</p>
-        <div class="product-footer">
-          <span class="product-price">${product.price}</span>
-          <button class="btn-primary small" onclick="window.addToCart(${product.id})">
-            افزودن به سبد خرید
-          </button>
-        </div>
-      </div>
-    `).join('');
 
-    // Re-observe for animations
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  }
 
   // --- Cart Logic ---
   window.addToCart = async (productId) => {
@@ -315,7 +290,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     cartItemsContainer.innerHTML = cart.map(item => `
-      <div class="cart-item">
+      < div class= "cart-item" >
         <div class="item-info">
           <h4>${item.title}</h4>
           <span class="item-price">${item.price} x ${item.quantity}</span>
@@ -323,8 +298,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         <button class="remove-btn" onclick="window.removeFromCart(${item.id})">
           <i class="ph-fill ph-trash"></i>
         </button>
-      </div>
-    `).join('');
+      </div >
+      `).join('');
 
     // Simple total calculation (parsing string price)
     const total = cart.reduce((sum, item) => {
